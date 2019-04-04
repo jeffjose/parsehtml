@@ -13,8 +13,8 @@ from pygments.formatters import TerminalTrueColorFormatter, Terminal256Formatter
 
 parser = argparse.ArgumentParser(description = "Parse and filter HTML")
 
+parser.add_argument('query', help = "CSS selector and filter expression", default = ":root", nargs = "?")
 parser.add_argument('--input', help = "Input URL. Use - for stdin", default = "-")
-parser.add_argument('selector', help = "CSS Selector", default = ":root")
 parser.add_argument('--indent', help = "Indent", default = 2, type = int)
 
 args = parser.parse_args()
@@ -39,15 +39,32 @@ def formatter(str):
     else:
         return highlight(json.dumps(j, indent = args.indent), PythonLexer(), Terminal256Formatter(style = "autumn"))
 
-def printer(tags):
+def printer(tags, display):
 
     for tag in tags:
-        print(tag.prettify(formatter = formatter), end = "")
+
+        if not display:
+            print(tag.prettify(formatter = formatter), end = "")
+        else:
+            import pdb; pdb.set_trace()
+
+def parseSelector(query):
+
+    try:
+        selector, display = query.split('|')
+    except:
+        selector = query
+        display = ""
+
+    return selector, display
 
 html = parseHTML(args.input)
 
 soup = BeautifulSoup(html, features = 'html.parser')
 
-matches = soup.select(args.selector)
+selector, display = parseSelector(args.query)
+print(selector, display)
 
-printer(matches)
+matches = soup.select(selector)
+
+printer(matches, display)
