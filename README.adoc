@@ -1,3 +1,5 @@
-= parsehtml
+= puppy
 
-parse html and select tags using CSS selectors
+puppy is an HTML parser for your commandline. Inspired by https://github.com/ericchiang/pup[ericchiang/pup]
+
+puppy is essentially pup-py
