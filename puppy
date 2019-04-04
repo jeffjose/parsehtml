@@ -13,8 +13,8 @@ from pygments.formatters import TerminalTrueColorFormatter, Terminal256Formatter
 
 parser = argparse.ArgumentParser(description = "Parse and filter HTML")
 
-parser.add_argument('input', help = "Input URL. Use - for stdin", default = "-")
-parser.add_argument('selector', help = "CSS Selector")
+parser.add_argument('--input', help = "Input URL. Use - for stdin", default = "-")
+parser.add_argument('selector', help = "CSS Selector", default = ":root")
 parser.add_argument('--indent', help = "Indent", default = 2, type = int)
 
 args = parser.parse_args()
@@ -23,11 +23,13 @@ def parseHTML(input):
 
     if input.startswith('http'):
         html = requests.get(input).text
-
     elif input is "-":
         html = sys.stdin.read()
+    else:
+        html = open(input, 'r').read()
 
     return html
+parser.add_argument('input', help = "Input URL. Use - for stdin", default = "-")
 
 def formatter(str):
     try:
@@ -40,7 +42,7 @@ def formatter(str):
 def printer(tags):
 
     for tag in tags:
-        print(tag.prettify(formatter = formatter))
+        print(tag.prettify(formatter = formatter), end = "")
 
 html = parseHTML(args.input)
 
