@@ -50,7 +50,11 @@ def printer(tags, display):
         else:
 
             if display in ['innerHTML', 'text']:
-                import pdb; pdb.set_trace()
+                text = tag.get_text()
+                try:
+                    print(highlight(json.dumps(json.loads(text.replace('\n', '')), indent = args.indent), PythonLexer(), Terminal256Formatter(style = 'autumn')))
+                except:
+                    print(text)
             else:
                 print(tag.contents[0].get(display))
 
