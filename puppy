@@ -17,6 +17,7 @@ parser = argparse.ArgumentParser(description = "Parse and filter HTML")
 parser.add_argument('query', help = "CSS selector and filter expression", default = ":root", nargs = "?")
 parser.add_argument('--input', '-i', help = "Input URL. Use - for stdin", default = "-")
 parser.add_argument('--indent', help = "Indent", default = 2, type = int)
+parser.add_argument('--nocolor', help = "Dont colorize output", action="store_true")
 
 args = parser.parse_args()
 
@@ -39,7 +40,10 @@ def formatter(str):
     except:
         return str
     else:
-        return highlight(json.dumps(j, indent = args.indent), PythonLexer(), Terminal256Formatter(style = "autumn"))
+        if args.nocolor:
+            return json.dumps(j, indent = args.indent)
+        else:
+            return highlight(json.dumps(j, indent = args.indent), PythonLexer(), Terminal256Formatter(style = "autumn"))
 
 def printer(tags, display):
 
